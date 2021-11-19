@@ -1,8 +1,6 @@
-function SingleMicroStep() {//legacy(entfernen)?
+function SingleMicroStep() { //legacy(remove)?
     microStep();
 }
-
-// Abläufe im Microcode
 
 function microStep(display) {
     switch (parseInt(MicroCode[microcodeCounter])) {
@@ -172,8 +170,8 @@ function microStep(display) {
             Halt();
             NullMc();
             break;
+    } 
 
-    } //switch
     document.getElementById("MicoCodeCounter").innerText = zeroPad(microcodeCounter, ramLength - 1);
 
     if (microcodeCounter > 0) {
@@ -184,7 +182,8 @@ function microStep(display) {
 }
 
 
-//Funktionen des MicroCode
+/* Micro-instructions */
+
 function RamDb() {
     dataBus = Ram[addressBus];
     highlightRamAccess()
@@ -211,7 +210,6 @@ function DbAcc() {
     addStepToMacro(18);
 }
 
-
 function AccDb() {
     dataBus = Akkumulator;
     document.getElementById("DataBus").innerHTML = zeroPad(dataBus, ramLength + 1)
@@ -222,7 +220,6 @@ function NullAcc() {
     Akkumulator = 0;
     document.getElementById("Accumulator").innerHTML = "00000";
     FadeIn(9);
-
     addStepToMacro(12);
 }
 
@@ -242,7 +239,6 @@ function DecAcc() {
         FadeIn(9);
     } else {
         FadeOut(9);
-
     }
     addStepToMacro(17);
 }
@@ -274,7 +270,6 @@ function SubAcc() {
         FadeIn(9);
     } else {
         FadeOut(9);
-
     }
     addStepToMacro(14);
 }
@@ -309,7 +304,6 @@ function PcAd() {
 function NullMc() {
     writeToMc(0)
     addStepToMacro(7);
-
 }
 
 function IncPc() {
@@ -324,10 +318,8 @@ function IncPc0() {
     if (programCounter < parseInt("9".repeat(ramLength - 1)) && Akkumulator == 0) {
         writeToPc(programCounter + 1)
     }
-
     addStepToMacro(10);
 }
-
 
 function Halt() {
     alert("End of program.")

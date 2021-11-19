@@ -414,7 +414,6 @@ function EditRam(CellNumber) {
             document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamArrowHeight / 2 + tableHeight / 2) + "px"; //reposition RAM arrow on input
         }
     }
-
 }
 
 
@@ -426,7 +425,6 @@ function highlightMc(column) {
 
         document.getElementsByClassName("MicroCodeTable")[microcodeCounter].style.background = "yellow"
     }
-
 }
 
 

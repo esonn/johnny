@@ -40,6 +40,6 @@ function writeToAcc(number) {
 
 function writeToPc(number) {
     programCounter = parseInt(number);
-    document.getElementById("ProgrammCounter").innerText = zeroPad(number, ramLength - 1);
+    document.getElementById("ProgramCounter").innerText = zeroPad(number, ramLength - 1);
     EditRam(programCounter);
 }

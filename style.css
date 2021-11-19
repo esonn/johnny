@@ -111,15 +111,13 @@ body {
     top: 2.5vh;
 }
 
-/* Eigentliches Programm */
-#programmCounterText {
+#programCounterText {
     position: fixed;
     left: 71.3vw;
     top: 36vh;
     width: 5vw;
     height: 1vh;
     font-size: 1.8vmin;
-     /* color: #969696; */
     color: #696969;
 }
 
@@ -278,7 +276,7 @@ body {
     transform: translate(-50%, 0%);
 }
 
-#ProgrammCounter {
+#ProgramCounter {
     position: fixed;
     left: 66.5vw;
     top: 35vh;

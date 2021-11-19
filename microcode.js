@@ -5,10 +5,10 @@ function SingleMicroStep() {//legacy(entfernen)?
 // Abläufe im Microcode
 
 function microStep(display) {
-    switch (parseInt(MicroCode[MicroCodeCounter])) {
+    switch (parseInt(MicroCode[microcodeCounter])) {
         case 2:
             RamDb();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(1);
                 setTimeout(FadeOut, blockFadeoutTime, 1)
@@ -17,7 +17,7 @@ function microStep(display) {
 
         case 1:
             DbRam();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(0);
                 setTimeout(FadeOut, blockFadeoutTime, 0)
@@ -26,7 +26,7 @@ function microStep(display) {
 
         case 13:
             AddAcc();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(3);
                 setTimeout(FadeOut, blockFadeoutTime, 3)
@@ -35,7 +35,7 @@ function microStep(display) {
 
         case 14:
             SubAcc();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(3);
                 setTimeout(FadeOut, blockFadeoutTime, 3)
@@ -44,7 +44,7 @@ function microStep(display) {
 
         case 12:
             NullAcc();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(11);
                 setTimeout(FadeOut, blockFadeoutTime, 13)
@@ -53,7 +53,7 @@ function microStep(display) {
 
         case 18:
             DbAcc();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(3);
                 setTimeout(FadeOut, blockFadeoutTime, 3)
@@ -62,7 +62,7 @@ function microStep(display) {
 
         case 15:
             AccDb();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(4);
                 setTimeout(FadeOut, blockFadeoutTime, 4)
@@ -71,7 +71,7 @@ function microStep(display) {
 
         case 16:
             IncAcc();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(12);
                 setTimeout(FadeOut, blockFadeoutTime, 12)
@@ -80,7 +80,7 @@ function microStep(display) {
 
         case 17:
             DecAcc();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(13);
                 setTimeout(FadeOut, blockFadeoutTime, 13)
@@ -89,7 +89,7 @@ function microStep(display) {
 
         case 3:
             DbIns();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(2);
                 setTimeout(FadeOut, blockFadeoutTime, 2)
@@ -106,7 +106,7 @@ function microStep(display) {
 
         case 11:
             InsPc();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(7);
                 setTimeout(FadeOut, blockFadeoutTime, 7)
@@ -115,7 +115,7 @@ function microStep(display) {
 
         case 4:
             InsAd();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(6);
                 setTimeout(FadeOut, blockFadeoutTime, 6)
@@ -124,7 +124,7 @@ function microStep(display) {
 
         case 8:
             PcAd();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(8);
                 setTimeout(FadeOut, blockFadeoutTime, 8)
@@ -141,7 +141,7 @@ function microStep(display) {
 
         case 9:
             IncPc();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(17);
                 setTimeout(FadeOut, blockFadeoutTime, 17)
@@ -150,7 +150,7 @@ function microStep(display) {
 
         case 10:
             IncPc0();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(16);
                 setTimeout(FadeOut, blockFadeoutTime, 16)
@@ -159,7 +159,7 @@ function microStep(display) {
 
         case 19:
             Halt();
-            MicroCodeCounter++;
+            microcodeCounter++;
             if (display) {
                 FadeIn(15);
                 setTimeout(FadeOut, blockFadeoutTime, 15)
@@ -167,40 +167,40 @@ function microStep(display) {
             break;
 
         default:
-            console.error("Invalid instruction " + MicroCode[MicroCodeCounter] + "at address " + MicroCodeCounter + " - terminating program.");
-            alert("No instruction at microcode address " + MicroCodeCounter + " - terminating program.")
+            console.error("Invalid instruction " + MicroCode[microcodeCounter] + "at address " + MicroCodeCounter + " - terminating program.");
+            alert("No instruction at microcode address " + microcodeCounter + " - terminating program.")
             Halt();
             NullMc();
             break;
 
     } //switch
-    document.getElementById("MicoCodeCounter").innerText = zeroPad(MicroCodeCounter, ramLength - 1);
+    document.getElementById("MicoCodeCounter").innerText = zeroPad(microcodeCounter, ramLength - 1);
 
-    if (MicroCodeCounter > 0) {
-        document.getElementsByClassName("MicroCodeTable")[MicroCodeCounter - 1].style.background = ""
+    if (microcodeCounter > 0) {
+        document.getElementsByClassName("MicroCodeTable")[microcodeCounter - 1].style.background = ""
     }
-    highlightMc(MicroCodeCounter)
+    highlightMc(microcodeCounter)
 
 }
 
 
 //Funktionen des MicroCode
 function RamDb() {
-    Datenbus = Ram[Addressbus];
+    dataBus = Ram[addressBus];
     highlightRamAccess()
-    document.getElementById("DataBus").innerHTML = zeroPad(Datenbus, ramLength + 1);
-    aufnehmen(2);
+    document.getElementById("DataBus").innerHTML = zeroPad(dataBus, ramLength + 1);
+    addStepToMacro(2);
 }
 
 
 function DbRam() {
-    writeToRam(Datenbus, Addressbus)
+    writeToRam(dataBus, addressBus)
     highlightRamAccess()
-    aufnehmen(1);
+    addStepToMacro(1);
 }
 
 function DbAcc() {
-    Akkumulator = Datenbus;
+    Akkumulator = dataBus;
     document.getElementById("Accumulator").innerHTML = zeroPad(Akkumulator, ramLength + 1)
 
     if (Akkumulator == 0) {
@@ -208,14 +208,14 @@ function DbAcc() {
     } else {
         FadeOut(9);
     }
-    aufnehmen(18);
+    addStepToMacro(18);
 }
 
 
 function AccDb() {
-    Datenbus = Akkumulator;
-    document.getElementById("DataBus").innerHTML = zeroPad(Datenbus, ramLength + 1)
-    aufnehmen(15);
+    dataBus = Akkumulator;
+    document.getElementById("DataBus").innerHTML = zeroPad(dataBus, ramLength + 1)
+    addStepToMacro(15);
 }
 
 function NullAcc() {
@@ -223,7 +223,7 @@ function NullAcc() {
     document.getElementById("Accumulator").innerHTML = "00000";
     FadeIn(9);
 
-    aufnehmen(12);
+    addStepToMacro(12);
 }
 
 function IncAcc() {
@@ -231,7 +231,7 @@ function IncAcc() {
         Akkumulator++
     }
     document.getElementById("Accumulator").innerHTML = zeroPad(Akkumulator, ramLength + 1)
-    aufnehmen(16);
+    addStepToMacro(16);
     FadeOut(9);
 }
 
@@ -244,15 +244,15 @@ function DecAcc() {
         FadeOut(9);
 
     }
-    aufnehmen(17);
+    addStepToMacro(17);
 }
 
 function AddAcc() {
-    if (Akkumulator + Datenbus < "2" + "0".repeat(ramLength)) {
-        Akkumulator += Datenbus;
+    if (Akkumulator + dataBus < "2" + "0".repeat(ramLength)) {
+        Akkumulator += dataBus;
     } else Akkumulator = (1 + "9".repeat(ramLength)).toString();
     document.getElementById("Accumulator").innerHTML = zeroPad(Akkumulator, ramLength + 1)
-    aufnehmen(13);
+    addStepToMacro(13);
 
     if (Akkumulator == 0) {
         FadeIn(9);
@@ -262,8 +262,8 @@ function AddAcc() {
 }
 
 function SubAcc() {
-    if (Akkumulator - Datenbus >= 0) {
-        Akkumulator -= Datenbus;
+    if (Akkumulator - dataBus >= 0) {
+        Akkumulator -= dataBus;
     } else {
         Akkumulator = 0;
     }
@@ -276,61 +276,61 @@ function SubAcc() {
         FadeOut(9);
 
     }
-    aufnehmen(14);
+    addStepToMacro(14);
 }
 
 function DbIns() {
-    writeToIns(Datenbus);
-    aufnehmen(3);
+    writeToIns(dataBus);
+    addStepToMacro(3);
 }
 
 function InsMc() {
     console.log(Math.floor(ins / ramSize) * 10);
     writeToMc(Math.floor(ins / ramSize) * 10) //get only the opcode
-    aufnehmen(5);
+    addStepToMacro(5);
 }
 
 function InsAd() {
     writeToAddressBus(zeroPad(ins, ramLength + 1).substr(2, ramLength + 1));
-    aufnehmen(4);
+    addStepToMacro(4);
 }
 
 
 function InsPc() {
     writeToPc(zeroPad(ins, ramLength + 1).substr(2, ramLength + 1))
-    aufnehmen(11);
+    addStepToMacro(11);
 }
 
 function PcAd() {
-    writeToAddressBus(Programmzaeler);
-    aufnehmen(8);
+    writeToAddressBus(programCounter);
+    addStepToMacro(8);
 }
 
 function NullMc() {
     writeToMc(0)
-    aufnehmen(7);
+    addStepToMacro(7);
 
 }
 
 function IncPc() {
-    if (Programmzaeler < parseInt("9".repeat(ramLength - 1))) {
-        writeToPc(Programmzaeler + 1)
+    if (programCounter < parseInt("9".repeat(ramLength - 1))) {
+        writeToPc(programCounter + 1)
 
     }
-    aufnehmen(9);
+    addStepToMacro(9);
 }
 
 function IncPc0() {
-    if (Programmzaeler < parseInt("9".repeat(ramLength - 1)) && Akkumulator == 0) {
-        writeToPc(Programmzaeler + 1)
+    if (programCounter < parseInt("9".repeat(ramLength - 1)) && Akkumulator == 0) {
+        writeToPc(programCounter + 1)
     }
 
-    aufnehmen(10);
+    addStepToMacro(10);
 }
 
 
 function Halt() {
     alert("End of program.")
     halt = true;
-    aufnehmen(19);
+    addStepToMacro(19);
 }

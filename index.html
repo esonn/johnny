@@ -18,7 +18,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 mit dank an Dr. Peter Dauscher
 -->
 <html lang="en">
@@ -86,12 +85,12 @@ mit dank an Dr. Peter Dauscher
 
         <abbr title="One macro step"><img tabindex=0 src="./images/macro_step.png" onclick="SingleMacroStep()"
                                           class="icon blackborder"></img></abbr>
-        <abbr title="Run Programm"><img tabindex=0 src="./images/macro_run.png" onclick="executeProgramm()"
+        <abbr title="Run Programm"><img tabindex=0 src="./images/macro_run.png" onclick="executeProgram()"
                                         class="icon blackborder"></img></abbr>
 
         <abbr title="Programm execution speed"><input type="range" min="0" max="3000" step="1.0"
                                                       onchange="updateSpeed()" id="executeSpeedSlider"></abbr>
-        <abbr title="Pause programm"><img tabindex=0 src="./images/macro_pause.png" onclick="pauseProgramm()"
+        <abbr title="Pause programm"><img tabindex=0 src="./images/macro_pause.png" onclick="pauseProgram()"
                                           class="icon blackborder"></img></abbr>
         <abbr title="Reset"><img tabindex=0 src="./images/reset.png" onclick="resetComputer()"
                                  class="icon blackborder"></img></abbr>
@@ -117,11 +116,10 @@ mit dank an Dr. Peter Dauscher
 
 
     <div id="recordMcPanel" class="control">
-        <abbr title="Record macrocode"><img tabindex=0 src="./images/record_macro.svg" onclick="aufnahme()"
+        <abbr title="Record macrocode"><img tabindex=0 src="./images/record_macro.svg" onclick="recordMacro()"
                                             class="icon"></img></abbr>
-        <abbr title="Address in micro programm memory of new Macrocode "><input type="number" id="aufnahmeZahl"
-                                                                                step="10" min="0" max="200" value="110"></abbr>
-        <abbr title="Name of new macro program"><input type="text" id="aufnahmeName" maxlength="5" value="NN"></abbr>
+        <abbr title="Address in micro program memory of new Macrocode "><input type="number" id="new_macro_id" step="10" min="0" max="200" value="110"></abbr>
+        <abbr title="Name of new macro program"><input type="text" id="new_macro_name" maxlength="5" value="NN"></abbr>
         <!--<button onclick="toggleBonsai"></button> how tf did this slip troug TODO: was this neded in any way? -->
     </div>
 

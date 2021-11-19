@@ -7,8 +7,8 @@ function writeToRam(Value, Address) {
 }
 
 function writeToAddressBus(number) {
-    Addressbus = parseInt(number);
-    document.getElementById("AddressBus").innerText = zeroPad(Addressbus, ramLength - 1)
+    addressBus = parseInt(number);
+    document.getElementById("AddressBus").innerText = zeroPad(addressBus, ramLength - 1)
 }
 
 function writeToIns(number) {
@@ -19,18 +19,18 @@ function writeToIns(number) {
 
 
 function writeToDb(number) {
-    Datenbus = parseInt(number);
+    dataBus = parseInt(number);
     document.getElementById("DataBus").innerText = zeroPad(number, ramLength + 1)
 }
 
 function writeToMc(number) {
-    document.getElementsByClassName("MicroCodeTable")[MicroCodeCounter].style.background = ""
+    document.getElementsByClassName("MicroCodeTable")[microcodeCounter].style.background = ""
 
-    MicroCodeCounter = parseInt(number);
+    microcodeCounter = parseInt(number);
     document.getElementById("MicoCodeCounter").innerText = zeroPad(number, ramLength - 1)
 
     // highlighten der spalte
-    highlightMc(MicroCodeCounter)
+    highlightMc(microcodeCounter)
 }
 
 function writeToAcc(number) {
@@ -39,7 +39,7 @@ function writeToAcc(number) {
 }
 
 function writeToPc(number) {
-    Programmzaeler = parseInt(number);
+    programCounter = parseInt(number);
     document.getElementById("ProgrammCounter").innerText = zeroPad(number, ramLength - 1);
-    EditRam(Programmzaeler);
+    EditRam(programCounter);
 }

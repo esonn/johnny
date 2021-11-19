@@ -3,54 +3,54 @@
     mit dank an Dr. Peter Dauscher
 */
 
-//data which is reset on every execution
-var Addressbus = 0;
-var Datenbus = 0;
+/* data which is reset on every execution */
+var addressBus = 0;
+var dataBus = 0;
 var halt = false;
 var Akkumulator = 0;
 
 var pause = false;
 
 var ins = 0;
-var Programmzaeler = 0;
+var programCounter = 0;
 
-var MicroCodeCounter = 0;
+var microcodeCounter = 0;
 var recording = false;
-var recordingCounter = 150; //gibt an an welcher stelle
+var recordingCounter = 150; //position indicator
 
-//data which is *not* reset on every execution
+/* data which is *not* reset on every execution */
 var bonsai = false;
-var timeoutforexecution  //zum abbrechen des ausführen des Programms
-var alterProgrammzaeler = 0;
-var geschwindigkeit = 1700; // intervall in dem instructione ausgeführt werden
+var timeoutforexecution; //abort executed program
+var previousProgramCounter = 0;
+var executionSpeed = 1700; // delay in ms
 
 var SelectetRamModule = 0;
 var dataHighlightedRamModule = 0;
 
 var controlUnit = false;
-var numberDevisionChar = "." //für ändern zum komma beim englischen
-var MicroCode = [];//0-199 microdeprogramm, 200+ namen der Macrocodes
-var MicroCodeString = "";//nur zum Einlesen
+var numberDevisionChar = "."; //"." vs "," decimal place separator
+var MicroCode = []; //0-199 microcode, 200+ name of macrocodes
+var MicroCodeString = ""; //for input only
 var lines = [];
 
 var blockFadeoutTime = 1200;
 
-var blinkgeschwindigkeit = 700;
-var blinkzyklus = 0;
-var timeoutforblinking //damit das Blinken abgebrochen werden kann
+var blinkSpeed = 700;
+var blinkCycle = 0;
+var blinkTimeout; //to abort blinking process
 
+var RamArrowHeight; // RAM input arrow position (left)
+var tableHeight;
 
-var RamEingabeHeight //positionierung des Pfeils
-var tabelHeight
-
-var startScreenFadeOutTime = 1000; // für den Ladebildschirm
+var startScreenFadeOutTime = 1000; // loading screen
 var loaded = false;
 
 const ramSize = 1000  //this ideally has to be a multiple of 10
 const ramLength = Math.log10(ramSize) + 1;
 
 var Ram = JSON.parse(localStorage.getItem('johnny-ram'));
-if (Ram == null) {//default if local store has been cleared or johnny is started for the first time
+if (Ram == null) {
+    //default if local store has been cleared or johnny is started for the first time
     Ram = [];
     for (i = 0; i < ramSize; i++) {
         Ram[i] = 0;
@@ -60,7 +60,6 @@ if (Ram == null) {//default if local store has been cleared or johnny is started
 
 var turboMode = false;
 
-//funktionen ohne Zuordnung
 function initialize() {
     instructionsauswahl = document.getElementById("CommandSelect");
 
@@ -73,18 +72,18 @@ function initialize() {
         GenerateMicroCodeTable();
     }
 
-    document.getElementById("executeSpeedSlider").value = geschwindigkeit;
+    document.getElementById("executeSpeedSlider").value = executionSpeed;
     document.getElementById("controlUnitCheckbox").checked = false;
 
     document.getElementById("AddressBusInput").addEventListener("keydown", AddressBusInputKeydown);//damit die Entertaste funktioniert
     document.getElementById("DataBusInput").addEventListener("keydown", DataBusInputKeydown);
     document.getElementById("RamInput").addEventListener("keydown", RamInputKeydown);
-    document.addEventListener("keydown", keyDownHandler); //nur zum überspringen des ladebildschirms (wird nach dem Laden wieder entfernt)
-    document.addEventListener("mousedown", mouseDownHandler); //nur zum überspringen des ladebildschirms (wird nach dem Laden wieder entfernt)
+    document.addEventListener("keydown", keyDownHandler); //for loading screen skip only
+    document.addEventListener("mousedown", mouseDownHandler); //for loading screen skip only
     window.addEventListener('resize', resize);
 
     document.getElementById(0).style.background = "#00F45D";
-    //ladeBildschirm
+    
     loaded = true;
     document.getElementById("loading").innerText = "";
     var loadEnd = new Date().getTime()
@@ -103,16 +102,15 @@ function resetMicrocode() {
     GenerateMicroCodeTable();
 }
 
-function fadeOutStartScreen() {//für verzögertes ausblenden des Startblidschirms(frühstens nach startScreenFadeOutTime ms  )
+function fadeOutStartScreen() {// delayed removal of loading screen (only after startScreenFadeOutTime)
     document.getElementById("startscreen").style.display = "none";
     document.getElementById("programm").style.display = "inline";
     document.getElementsByTagName("body")[0].style.backgroundImage = "url(background.png)"
-    document.removeEventListener("keydown", keyDownHandler);	//wird für sonst nichts genutzt
-    document.removeEventListener("mousedown", mouseDownHandler);	//wird für sonst nichts genutzt
+    document.removeEventListener("keydown", keyDownHandler);	//remains unused
+    document.removeEventListener("mousedown", mouseDownHandler);	//remains unused
 
-    //dinge die nach dem Anzeigen gemacht werden müssen
     document.getElementById("innerRamDiv").scrollTop = 0
-    resize();//damit rameingabe richtig sitzt
+    resize(); //RAM input correction
     resetComputer()
 }
 
@@ -120,7 +118,6 @@ function keyDownHandler() {
     if (loaded) {
         fadeOutStartScreen();
     }
-
 }
 
 
@@ -128,14 +125,14 @@ function mouseDownHandler() {
     if (loaded) {
         fadeOutStartScreen();
     }
-
 }
 
 
 function resize() {
-    RamEingabeHeight = getObjectHeight(document.getElementById("RamEingabe"))  //neupositionierung des Peiles für die Rameingabe bei änderung der Größe
-    tabelHeight = getObjectHeight(document.getElementById(SelectetRamModule))
-    document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamEingabeHeight / 2 + tabelHeight / 2) + "px";
+    //reposition RAM arrow on size change
+    RamArrowHeight = getObjectHeight(document.getElementById("RamEingabe"))
+    tableHeight = getObjectHeight(document.getElementById(SelectetRamModule))
+    document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamArrowHeight / 2 + tableHeight / 2) + "px";
 
     // needed for the Safari fix
     scrollMaxX = document.body.scrollWidth - window.innerWidth;
@@ -161,21 +158,20 @@ function AddressBusInputKeydown(e) {
 }
 
 
-function CheckNumber(X, maxValue, minValue) {//Überprüft ob nur Zaheln eingegeben wurden +Größe der Zahlen
+//checks number presence and its values
+function CheckNumber(X, maxValue, minValue) {
     if (X <= maxValue && typeof X == "number" && X >= minValue) {
         return X;
-
     } else if (X > maxValue) {
         return maxValue
-
     } else {
         return 0;
     }
 }
 
 function updateSpeed() {
-    geschwindigkeit = 3000 - document.getElementById("executeSpeedSlider").value;
-    if (geschwindigkeit == 0) {
+    executionSpeed = 3000 - document.getElementById("executeSpeedSlider").value;
+    if (executionSpeed == 0) {
         turboMode = true;
     } else {
         turboMode = false;
@@ -189,61 +185,63 @@ function zeroPad(num, places) {
 }
 
 
-function getObjectHeight(object) {//nimmt ein objekt und gibt die Höhe zurück
+function getObjectHeight(object) {
     return object.getBoundingClientRect().bottom - object.getBoundingClientRect().top
 }
 
 
-//aufnahme
-function aufnahmeBlinken() {
-    if (blinkzyklus == 0) {
+function recordBlinkingIndicator() {
+    if (blinkCycle == 0) {
         document.getElementById("recordMcPanel").style.backgroundColor = "red";
-        blinkzyklus++;
+        blinkCycle++;
     } else {
         document.getElementById("recordMcPanel").style.backgroundColor = "yellow";
-        blinkzyklus = 0;
+        blinkCycle = 0;
     }
-    timeoutforblinking = setTimeout(aufnahmeBlinken, blinkgeschwindigkeit);
+    blinkTimeout = setTimeout(recordBlinkingIndicator, blinkSpeed);
 }
 
-function aufnahme() {
+//Record a new macro-instruction (by issuing micro instructions)
+function recordMacro() {
     if (recording) {
         recording = false;
-        clearTimeout(timeoutforblinking);
+        clearTimeout(blinkTimeout);
         document.getElementById("recordMcPanel").style.backgroundColor = "";
     } else {
         recording = true;
-        recordingCounter = Math.floor(CheckNumber(parseInt(document.getElementById("aufnahmeZahl").value), 200, 0) / 10) * 10 // ignorieren der letzen stelle
-        MicroCode[recordingCounter / 10 + 200] = document.getElementById("aufnahmeName").value; //speichern des Namens
-        document.getElementsByClassName("Mccol1")[recordingCounter].innerText = recordingCounter + "   " + MicroCode[recordingCounter / 10 + 200] + ":";//name im Mc Tabelle einfügen
+        recordingCounter = Math.floor(CheckNumber(parseInt(document.getElementById("new_macro_id").value), 200, 0) / 10) * 10 // ignore last digit
+        MicroCode[recordingCounter / 10 + 200] = document.getElementById("new_macro_name").value; //store name
+        document.getElementsByClassName("Mccol1")[recordingCounter].innerText = recordingCounter + "   " + MicroCode[recordingCounter / 10 + 200] + ":"; //add name to microcode
 
-        for (i = recordingCounter; i < recordingCounter + 10; i++) {//zurückseten der instructione im Mc
+        for (i = recordingCounter; i < recordingCounter + 10; i++) {
+            //reset microcode
             MicroCode[i] = 0;
             document.getElementsByClassName("Mccol2")[i].innerText = "";
         }
 
 
-        //springen im Mc
+        //jump in microcode
         var myElement = document.getElementsByClassName('Mccol2')[recordingCounter - 10];
         var topPos = myElement.offsetTop;
         document.getElementById('testdiv').scrollTop = topPos;
 
-        //als option bei der Eingabe einfügen
+        //add new macro to input options
         newOption = document.createElement("option");
         Att = document.createAttribute("value");
         Att.value = recordingCounter / 10;
         newOption.setAttributeNode(Att);
         newOption.appendChild(document.createTextNode(zeroPad(recordingCounter / 10) + ": " + MicroCode[recordingCounter / 10 + 200]));
         document.getElementById("CommandSelect").appendChild(newOption)
-        aufnahmeBlinken();
+        recordBlinkingIndicator();
     }
 }
 
-function aufnehmen(instruction) {
-    if (recording) {
-        MicroCode[recordingCounter] = instruction;	//schreiben des instructions in mc
 
-        //springen beim aufnehmen
+//Add a new micro-instruction to a recording session
+function addStepToMacro(instruction) {
+    if (recording) {
+        MicroCode[recordingCounter] = instruction;
+
         var myElement = document.getElementsByClassName('Mccol2')[recordingCounter - 10];
         var topPos = myElement.offsetTop;
         document.getElementById('testdiv').scrollTop = topPos;
@@ -257,38 +255,38 @@ function aufnehmen(instruction) {
     }
 }
 
-var maxRecursion = 15
-var currentRecursions = 0;
 
-function executeProgramm() {
+function executeProgram() {
+    var maxRecursion = 15
+    var currentRecursions = 0;
+
     SingleMacroStep();
     pause = false;
 
-    if (!halt && alterProgrammzaeler != Programmzaeler) {// beenden beim Halt und bei endlosschleifen durch fehlende oder einen jmp instruction auf die selbe adresse
+    //end at 1) halt, 2) infinit loops/jumps to same address
+    if (!halt && previousProgramCounter != programCounter) {
         if (currentRecursions < maxRecursion && turboMode) {
             currentRecursions++;
-            alterProgrammzaeler = Programmzaeler;
-            executeProgramm();
+            previousProgramCounter = programCounter;
+            executeProgram();
         } else {
-            timeoutforexecution = setTimeout(executeProgramm, geschwindigkeit);
+            timeoutforexecution = setTimeout(executeProgram, executionSpeed);
             currentRecursions = 0;
         }
 
-        alterProgrammzaeler = Programmzaeler;
+        previousProgramCounter = programCounter;
     }
 }
 
 
 function SingleMacroStep() {
     microStep(false);
-    while (MicroCodeCounter != 0) {
+    while (microcodeCounter != 0) {
         microStep(false);
     }
 
 }
 
-
-//für Ram
 function AddOpnd(Address) { // TODO: should this be enabled in turbo mode?
     high = parseInt(zeroPad(Ram[Address], ramLength + 1).substr(0, 2)) + 200; //+200 um auslesen aus Microcode zu vereinfachen
 
@@ -303,16 +301,13 @@ function AddOpnd(Address) { // TODO: should this be enabled in turbo mode?
 }
 
 
-//einlesen einer Microcodedatei
+//read microcode input file
 document.getElementById('microcodefile').onchange = function () {
-
     var file = this.files[0];
-
     var reader = new FileReader();
     reader.onload = function (progressEvent) {
         // Entire file
         // console.log(this.result);
-
         // By lines
         MicroCode = this.result.split('\n');
 
@@ -320,36 +315,29 @@ document.getElementById('microcodefile').onchange = function () {
             MicroCode[i] = parseInt(MicroCode[i]);
         }
 
-        GenerateMicroCodeTable();//updaten von tabelle und macroinstructionsauswahl
+        GenerateMicroCodeTable();//update table and selection of macroinstruction 
     };
     reader.readAsText(file);
 
 
 };
 
-//einlesen einer Ramdatei
+//read RAM file
 document.getElementById('ramfile').onchange = function () {
-
     var file = this.files[0];
-
     var reader = new FileReader();
     reader.onload = function (progressEvent) {
         // Entire file
         // console.log(this.result);
-
         // By lines
         Ram = this.result.split('\n');
-
         updateRam()
-
     };
     reader.readAsText(file);
-
-
 };
 
 
-//"download" von dateien
+//download RAM
 function download(data, filename, type) {
     var file = new Blob([data], {type: type});
     if (window.navigator.msSaveOrOpenBlob) // IE10+
@@ -369,94 +357,88 @@ function download(data, filename, type) {
 }
 
 
-function pauseProgramm() {
+function pauseProgram() {
     if (!pause) {
         clearTimeout(timeoutforexecution);
         pause = true;
 
     } else {
-        timeoutforexecution = setTimeout(executeProgramm, geschwindigkeit);
+        timeoutforexecution = setTimeout(executeProgram, executionSpeed);
         pause = false;
     }
-
-
 }
 
 
 function nextRamModule() {
-    //entfärben of Ram
+    //decolorize
     document.getElementById(SelectetRamModule).style.background = "";
     if (SelectetRamModule < parseInt("9".repeat(ramLength - 1))) {
 
         SelectetRamModule++
     }
 
-//gelbfärbung der Spalte
+    //colorize column
     document.getElementById(SelectetRamModule).style.background = "yellow";
 
-    if (document.getElementById(SelectetRamModule).getBoundingClientRect().top + tabelHeight / 2 < document.getElementById("RamDiv").getBoundingClientRect().bottom) {
-        document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamEingabeHeight / 2 + tabelHeight / 2) + "px"; //neupositionierung des Peiles für die Rameingabe
+    if (document.getElementById(SelectetRamModule).getBoundingClientRect().top + tableHeight / 2 < document.getElementById("RamDiv").getBoundingClientRect().bottom) {
+        document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamArrowHeight / 2 + tableHeight / 2) + "px"; //reposition RAM arrow on new input
     } else {
-        document.getElementById("innerRamDiv").scrollTop = (SelectetRamModule - 1) * tabelHeight;
-        document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamEingabeHeight / 2 + tabelHeight / 2) + "px"; //neupositionierung des Peiles für die Rameingabe
+        document.getElementById("innerRamDiv").scrollTop = (SelectetRamModule - 1) * tableHeight;
+        document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamArrowHeight / 2 + tableHeight / 2) + "px"; //reposition RAM arrow on new input
     }
 }
 
 function EditRam(CellNumber) {
     if (!turboMode) {
-        //entfärben des alten Moduls
+        //decolorize RAM
         if (dataHighlightedRamModule != SelectetRamModule) {
             document.getElementById(SelectetRamModule).style.background = "";
         }
 
-
         if (typeof (CellNumber) == "object") {
-            //erkennen der Spalte
+            //detect column
             SelectetRamModule = CellNumber.srcElement.parentNode.id;
         } else {
             SelectetRamModule = CellNumber;
-
         }
 
-
-        //gelbfärbung der Spalte
+        //colorize column yellow
         if (dataHighlightedRamModule != SelectetRamModule) {
             document.getElementById(SelectetRamModule).style.background = "yellow";
         }
 
-        if (document.getElementById(SelectetRamModule).getBoundingClientRect().top + tabelHeight / 2 < document.getElementById("RamDiv").getBoundingClientRect().bottom) {
-            document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamEingabeHeight / 2 + tabelHeight / 2) + "px"; //neupositionierung des Peiles für die Rameingabe
+        if (document.getElementById(SelectetRamModule).getBoundingClientRect().top + tableHeight / 2 < document.getElementById("RamDiv").getBoundingClientRect().bottom) {
+            document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamArrowHeight / 2 + tableHeight / 2) + "px"; //resposition RAM arrow on input
         } else {
-            document.getElementById("innerRamDiv").scrollTop = (SelectetRamModule - 1) * tabelHeight;
-            document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamEingabeHeight / 2 + tabelHeight / 2) + "px"; //neupositionierung des Peiles für die Rameingabe
+            document.getElementById("innerRamDiv").scrollTop = (SelectetRamModule - 1) * tableHeight;
+            document.getElementById("RamEingabe").style.top = (document.getElementById(SelectetRamModule).getBoundingClientRect().top - RamArrowHeight / 2 + tableHeight / 2) + "px"; //reposition RAM arrow on input
         }
     }
 
 }
 
 
-function highlightMc(column) {	//übernimmt auch springen
-    //springen im Mc
+function highlightMc(column) {
     if (!turboMode) {
         var myElement = document.getElementsByClassName('Mccol2')[column];
         var topPos = myElement.offsetTop;
         document.getElementById('testdiv').scrollTop = topPos;
 
-        document.getElementsByClassName("MicroCodeTable")[MicroCodeCounter].style.background = "yellow"
+        document.getElementsByClassName("MicroCodeTable")[microcodeCounter].style.background = "yellow"
     }
 
 }
 
 
-function highlightRamAccess() {//übernimmt auch das ändern der unteren Tabelle
+function highlightRamAccess() {
     if (dataHighlightedRamModule == SelectetRamModule) {
         document.getElementById(SelectetRamModule).style.background = "yellow";
     } else {
         document.getElementById(dataHighlightedRamModule).style.background = "";
     }
 
-    if (MicroCodeCounter != 1) { //nichtanzeigen beim FETCH instruction
-        dataHighlightedRamModule = Addressbus;
+    if (microcodeCounter != 1) { //don't show FETCH instruction
+        dataHighlightedRamModule = addressBus;
         document.getElementById(dataHighlightedRamModule).style.background = "#00F45D";
     }
 }

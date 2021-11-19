@@ -1,9 +1,9 @@
 /*
-David Laubersheimer - 2019
-mit dank an Dr. Peter Dauscher
+    David Laubersheimer - 2019
+    mit dank an Dr. Peter Dauscher
 */
 
-//daten die zückgesetzt werden müssen
+//data which is reset on every execution
 var Addressbus = 0;
 var Datenbus = 0;
 var halt = false;
@@ -18,11 +18,11 @@ var MicroCodeCounter = 0;
 var recording = false;
 var recordingCounter = 150; //gibt an an welcher stelle
 
-//daten die nicht zurückgesetzt werden müssen
+//data which is *not* reset on every execution
 var bonsai = false;
 var timeoutforexecution  //zum abbrechen des ausführen des Programms
 var alterProgrammzaeler = 0;
-var geschwindigkeit = 1700; // intervall in dem Befehle ausgeführt werden
+var geschwindigkeit = 1700; // intervall in dem instructione ausgeführt werden
 
 var SelectetRamModule = 0;
 var dataHighlightedRamModule = 0;
@@ -62,7 +62,7 @@ var turboMode = false;
 
 //funktionen ohne Zuordnung
 function initialize() {
-    Befehlsauswahl = document.getElementById("CommandSelect");
+    instructionsauswahl = document.getElementById("CommandSelect");
 
     generateRam();
 
@@ -217,7 +217,7 @@ function aufnahme() {
         MicroCode[recordingCounter / 10 + 200] = document.getElementById("aufnahmeName").value; //speichern des Namens
         document.getElementsByClassName("Mccol1")[recordingCounter].innerText = recordingCounter + "   " + MicroCode[recordingCounter / 10 + 200] + ":";//name im Mc Tabelle einfügen
 
-        for (i = recordingCounter; i < recordingCounter + 10; i++) {//zurückseten der Befehle im Mc
+        for (i = recordingCounter; i < recordingCounter + 10; i++) {//zurückseten der instructione im Mc
             MicroCode[i] = 0;
             document.getElementsByClassName("Mccol2")[i].innerText = "";
         }
@@ -239,9 +239,9 @@ function aufnahme() {
     }
 }
 
-function aufnehmen(befehl) {
+function aufnehmen(instruction) {
     if (recording) {
-        MicroCode[recordingCounter] = befehl;	//schreiben des Befehls in mc
+        MicroCode[recordingCounter] = instruction;	//schreiben des instructions in mc
 
         //springen beim aufnehmen
         var myElement = document.getElementsByClassName('Mccol2')[recordingCounter - 10];
@@ -249,7 +249,7 @@ function aufnehmen(befehl) {
         document.getElementById('testdiv').scrollTop = topPos;
 
         newtd2 = document.getElementsByClassName("Mccol2")[recordingCounter];
-        newtd2.innerText = microCodeToText(befehl);
+        newtd2.innerText = microCodeToText(instruction);
 
         localStorage.setItem("johnny-microcode", JSON.stringify(MicroCode));
 
@@ -264,7 +264,7 @@ function executeProgramm() {
     SingleMacroStep();
     pause = false;
 
-    if (!halt && alterProgrammzaeler != Programmzaeler) {// beenden beim Halt und bei endlosschleifen durch fehlende oder einen jmp befehl auf die selbe adresse
+    if (!halt && alterProgrammzaeler != Programmzaeler) {// beenden beim Halt und bei endlosschleifen durch fehlende oder einen jmp instruction auf die selbe adresse
         if (currentRecursions < maxRecursion && turboMode) {
             currentRecursions++;
             alterProgrammzaeler = Programmzaeler;
@@ -320,7 +320,7 @@ document.getElementById('microcodefile').onchange = function () {
             MicroCode[i] = parseInt(MicroCode[i]);
         }
 
-        GenerateMicroCodeTable();//updaten von tabelle und macrobefehlsauswahl
+        GenerateMicroCodeTable();//updaten von tabelle und macroinstructionsauswahl
     };
     reader.readAsText(file);
 
@@ -455,7 +455,7 @@ function highlightRamAccess() {//übernimmt auch das ändern der unteren Tabelle
         document.getElementById(dataHighlightedRamModule).style.background = "";
     }
 
-    if (MicroCodeCounter != 1) { //nichtanzeigen beim FETCH befehl
+    if (MicroCodeCounter != 1) { //nichtanzeigen beim FETCH instruction
         dataHighlightedRamModule = Addressbus;
         document.getElementById(dataHighlightedRamModule).style.background = "#00F45D";
     }

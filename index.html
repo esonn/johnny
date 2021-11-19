@@ -149,32 +149,32 @@ mit dank an Dr. Peter Dauscher
             style="color:#207DFF; font-size:3vmin" id="InsLow">000</span></p>
     <p id="ProgrammCounter" class="control">000</p>
     <p id="MicoCodeCounter" class="control">000</p>
-    <p id="programmCounterText" class="control">Programm Counter</p>
-    <p id="equalZeroText">=0?</p>
+    <p id="programmCounterText" class="control">Program Counter</p>
+    <p id="equalZeroText">== 0?</p>
     <abbr title="set Data Bus">
-        <button onclick="ManuellDb()" id="DbInputButton">ManuellDb</button>
+        <button onclick="ManuellDb()" id="DbInputButton">ManualDb</button>
     </abbr>
     <abbr title="set Address Bus">
-        <button onclick="ManuellAB()" id="ABInputButton">ManuellAb</button>
+        <button onclick="ManuellAB()" id="ABInputButton">ManualAb</button>
     </abbr>
 
-    <button onclick="RamDbClick()" id="RamDbButton">ram-->db</button>
-    <button onclick="DbRamClick()" id="DbRamButton">db-->ram</button>
-    <button onclick="DbAccClick()" id="DbAccButton">db-->acc</button>
-    <button onclick="AccDbClick()" id="AccDbButton">acc-->db</button>
-    <button onclick="NullAccClick()" id="NullAccButton" class="hiddenInBonsai">acc=0</button>
+    <button onclick="RamDbClick()" id="RamDbButton">ram &#8658; db</button>
+    <button onclick="DbRamClick()" id="DbRamButton">db &#8658; ram</button>
+    <button onclick="DbAccClick()" id="DbAccButton">db &#8658; acc</button>
+    <button onclick="AccDbClick()" id="AccDbButton">acc &#8658; db</button>
+    <button onclick="NullAccClick()" id="NullAccButton" class="hiddenInBonsai">acc:=0</button>
     <button onclick="IncAccClick()" id="IncAccButton">acc++</button>
     <button onclick="DecAccClick()" id="DecAccButton">acc--</button>
     <button onclick="AddAccClick()" id="AddAccButton" class="hiddenInBonsai">plus</button>
     <button onclick="SubAccClick()" id="SubAccButton" class="hiddenInBonsai">minus</button>
-    <button onclick="DbInsClick()" id="DbInsButton" class="control">db-->ins</button>
-    <button onclick="InsMcClick()" id="InsMcButton" class="control">ins-->mc</button>
-    <button onclick="InsAdClick()" id="InsAbButton" class="control">ins-->ab</button>
-    <button onclick="InsPcClick()" id="InsPcButton" class="control">ins-->pc</button>
-    <button onclick="PcAdClick()" id="PcAbButton" class="control">pc-->ab</button>
+    <button onclick="DbInsClick()" id="DbInsButton" class="control">db &#8658; ins</button>
+    <button onclick="InsMcClick()" id="InsMcButton" class="control">ins &#8658; mc</button>
+    <button onclick="InsAdClick()" id="InsAbButton" class="control">ins &#8658; ab</button>
+    <button onclick="InsPcClick()" id="InsPcButton" class="control">ins&#8658;  pc</button>
+    <button onclick="PcAdClick()" id="PcAbButton" class="control">pc &#8658; ab</button>
     <button onclick="NullMcClick()" id="NullMcButton" class="control">mc:=0</button>
     <button onclick="IncPcClick()" id="IncPcButton" class="control">pc++</button>
-    <button onclick="IncPc0Click()" id="IncPc0Button" class="control">=0:pc++</button>
+    <button onclick="IncPc0Click()" id="IncPc0Button" class="control">=0: pc++</button>
     <button onclick="HaltClick()" id="HaltButton" class="control">stop</button>
 
 
@@ -221,7 +221,6 @@ mit dank an Dr. Peter Dauscher
 
     <div id="MicroCodeDiv" class="control">
 
-
         <table cellspacing="0" cellpadding="0" border="0" width="100%">
             <tr>
                 <td>
@@ -265,10 +264,8 @@ mit dank an Dr. Peter Dauscher
             <p>Johnny can also be installed as an app. Click<a
                     href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Developer_guide/Installing#the_install_user_experience"
                     target="_blank"> here</a> to learn how to install Johnny on your device</p>
-            <p>This programm is licenced under the GNU Affero General Public License. You can find the sourcecode at <a
-                    href="https://github.com/laubersheini/johnny">https://github.com/laubersheini/johnny</a></p>
-            <p>Feel free to report any bugs on the programms <a href="https://github.com/laubersheini/johnny/issues">Github
-                page</a></p>
+            <p>This programm is licenced under the GNU Affero General Public License (AGPL). You can find the sourcecode at <a href="https://github.com/esonn/johnny">https://github.com/esonn/johnny</a></p>
+            <p>All credits go to the original author <a href="https://github.com/laubersheini/">David Laubersheimer</a>.</p>
         </div>
 
     </div>

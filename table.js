@@ -1,4 +1,4 @@
-// Erstellen der Ramtabelle
+// Create new RAM table
 function generateRam() {
     p = document.getElementById("RamTBody");
     while (p.firstChild) {
@@ -55,7 +55,7 @@ function generateRam() {
         newtr.appendChild(newtd4);
 
 
-        //Zum erkennen auf welche Spalte gecklickt wurde
+        //Recognize which column was clicked on
         Att = document.createAttribute("class");
         Att.value = "RamCell";
         newtr.setAttributeNode(Att);
@@ -64,12 +64,12 @@ function generateRam() {
 
         newtr.setAttributeNode(Att);
         p.appendChild(newtr);
-        //Onclick event für eingeben von Daten
 
+        //Onclick event to enter data
         document.getElementsByClassName("RamCell")[n].addEventListener("click", EditRam)
     }
     ;
-} //ende GenerateRam
+} 
 
 function updateRam() {
     for (i = 0; i < ramSize; i++) {
@@ -80,7 +80,7 @@ function updateRam() {
 function GenerateMicroCodeTable() {
     var p = document.getElementById("McTBody");
 
-    // Löschen der alten einträge (wichtig wenn Mc von Datei geladen wird)
+    // Empty all entries - required if microcode is loaded from file
     while (p.firstChild) {
         p.removeChild(p.firstChild);
     }
@@ -111,16 +111,16 @@ function GenerateMicroCodeTable() {
     }
 
 
-    // einfügen der Auswahlmöglichkeiten für die eingabe in den Ram
+    // Insert macro-instruction to RAM dropdown menu
     p = document.getElementById("CommandSelect");
-    while (p.firstChild) {//entfernen alter einträge(wichtig wenn Mc neu geladen wird)
-        p.removeChild(p.firstChild);
+    while (p.firstChild) {
+        p.removeChild(p.firstChild); //remove old entries (required if newly loaded)
     }
     for (i = 200; i < MicroCode.length; i++) {
 
         document.getElementsByClassName("Mccol1")[(i - 200) * 10].appendChild(document.createTextNode("   " + MicroCode[i] + ":"));
 
-        if (i > 200) { //fetch nicht als auswählbaren befehl
+        if (i > 200) { //"fetch" instruction can't be selected
             newOption = document.createElement("option");
             Att = document.createAttribute("value");
             Att.value = i - 200;
@@ -130,17 +130,18 @@ function GenerateMicroCodeTable() {
         }
     }
 
-    updateRam(); // damit die neuen Macrobefehle im Ram angezeigt werden
+    updateRam(); // show new macro-instructions in RAM table
 }
 
-function microCodeToText(id) { // nimmt eine Microcodeid an und übersetzt diese in den Text wie er in der Tabelle steht
+//Convert microcode ID to text as seen in microcode table
+function microCodeToText(id) {
     switch (id) {
         case 0:
             return "---";
         case 2:
-            return "ram ---> db ";
+            return "ram ⇒ db ";
         case 1:
-            return "db ---> ram";
+            return "db ⇒ ram";
         case 13:
             return "plus";
         case 14:
@@ -148,33 +149,33 @@ function microCodeToText(id) { // nimmt eine Microcodeid an und übersetzt diese
         case 12:
             return "acc:=0";
         case 18:
-            return "db ---> acc";
+            return "db ⇒ acc";
         case 15:
-            return "acc ---> db ";
+            return "acc ⇒ db ";
         case 16:
             return "acc++";
         case 17:
             return "acc--";
         case 3:
-            return "db ---> ins";
+            return "db ⇒ ins";
         case 5:
-            return "ins ---> mc";
+            return "ins ⇒ mc";
         case 11:
-            return "ins ---> pc";
+            return "ins ⇒ pc";
         case 4:
-            return "ins ---> ab";
+            return "ins ⇒ ab";
         case 8:
-            return "pc ---> ab";
+            return "pc ⇒ ab";
         case 7:
-            return "mc:=0";
+            return "mc := 0";
         case 9:
             return "pc++";
         case 10:
-            return "acc=0?->pc++";
+            return "acc==0? ⇒ pc++";
         case 19:
             return "stop";
         default:
-            console.error("Ungültiger Befehl " + befehl);
+            console.error("Invalid instruction " + instruction);
             return;
     }
 }

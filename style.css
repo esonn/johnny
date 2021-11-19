@@ -58,6 +58,11 @@ body {
 
 }
 
+/* #MicroCodeDiv { */
+#testdiv{
+    font-family: monospace, monospace;
+}
+
 #crtIcon {
     width: 5.4vmin;
     height: 4vmin;
@@ -114,7 +119,8 @@ body {
     width: 5vw;
     height: 1vh;
     font-size: 1.8vmin;
-    color: #969696;
+     /* color: #969696; */
+    color: #696969;
 }
 
 #equalZeroText {
@@ -177,7 +183,7 @@ body {
     position: fixed;
     left: 20.5vw;
     top: 88.0vh;
-    font-size: 5vmin;
+    font-size: 4.6vmin;
     color: #eeffff;
 }
 
@@ -194,7 +200,7 @@ body {
     position: fixed;
     left: 20vw;
     top: 8vh;
-    font-size: 5vmin;
+    font-size: 4.6vmin;
     color: #ffffff;
 }
 
@@ -203,7 +209,7 @@ body {
     position: fixed;
     left: 14vw;
     top: 2.9vh;
-    font-size: 4vmin;
+    font-size: 3.8vmin;
     color: #696969;
 }
 
@@ -211,7 +217,7 @@ body {
     position: fixed;
     left: 50vw;
     top: 2.9vh;
-    font-size: 4vmin;
+    font-size: 3.8vmin;
     color: #696969;
 }
 
@@ -220,7 +226,7 @@ body {
     /* right: 3vw; */ /* for single-line */
     right: 7vw;
     top: 2.9vh;
-    font-size: 4vmin;
+    font-size: 3.8vmin;
     color: #696969;
 }
 
@@ -230,7 +236,7 @@ body {
     right: 45vw;
     top: 41vh;
     /*font-size: 2vmin;*/
-    font-size: 2vmin;
+    font-size: 1.8vmin;
     color: #696969;
 }
 
@@ -239,7 +245,7 @@ body {
     /* left: 14vw; */
     right: 36vw;
     top: 63vh;
-    font-size: 2vmin;
+    font-size: 1.8vmin;
     color: #696969;
 }
 
@@ -250,7 +256,7 @@ body {
     /* left: 14vw; */
     right: 6.5vw;
     top: 38vh;
-    font-size: 2vmin;
+    font-size: 1.8vmin;
     color: #696969;
 }
 

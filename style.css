@@ -143,6 +143,16 @@ body {
     height: 1vh;
 }
 
+#DataBusInput {
+    position: fixed;
+    left: 5vw;
+    top: 93vh;
+    width: 5vw;
+    height: 1vh;
+}
+
+
+
 #DbInputButton {
     position: fixed;
     left: 5vw;
@@ -163,6 +173,15 @@ body {
     color: #ffffff;
 }
 
+#DataBusLabel {
+    position: fixed;
+    left: 20.5vw;
+    top: 88.0vh;
+    font-size: 5vmin;
+    color: #eeffff;
+}
+
+
 #AddressBus {
     position: fixed;
     left: 50vw;
@@ -170,6 +189,71 @@ body {
     font-size: 3vmin;
     color: #ffffff;
 }
+
+#AddressBusLabel {
+    position: fixed;
+    left: 20vw;
+    top: 8vh;
+    font-size: 5vmin;
+    color: #ffffff;
+}
+
+
+#MemoryLabel {
+    position: fixed;
+    left: 14vw;
+    top: 2.9vh;
+    font-size: 4vmin;
+    color: #696969;
+}
+
+#ControlUnitLabel {
+    position: fixed;
+    left: 50vw;
+    top: 2.9vh;
+    font-size: 4vmin;
+    color: #696969;
+}
+
+#ALULabel {
+    position: fixed;
+    /* right: 3vw; */ /* for single-line */
+    right: 7vw;
+    top: 2.9vh;
+    font-size: 4vmin;
+    color: #696969;
+}
+
+#IRLabel{
+    position: fixed;
+    /* left: 14vw; */
+    right: 45vw;
+    top: 41vh;
+    /*font-size: 2vmin;*/
+    font-size: 2vmin;
+    color: #696969;
+}
+
+#MCLabel{
+    position: fixed;
+    /* left: 14vw; */
+    right: 36vw;
+    top: 63vh;
+    font-size: 2vmin;
+    color: #696969;
+}
+
+
+
+#AccumulatorLabel{
+    position: fixed;
+    /* left: 14vw; */
+    right: 6.5vw;
+    top: 38vh;
+    font-size: 2vmin;
+    color: #696969;
+}
+
 
 #Accumulator {
     position: fixed;

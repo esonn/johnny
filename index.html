@@ -44,13 +44,11 @@ mit dank an Dr. Peter Dauscher
 
 <body onload="initialize()">
 <div id="startscreen">
-    <p style="  font-size:15vmin ">Johnny 2.0</p>
+    <p style="  font-size:10vmin ">Johnny 2.0</p>
     <p style="  font-size:7vmin " id="loading">Loading</p>
-    <p style="  font-size:6vmin ">Simulation of a simplified Von Neumann Computer</p>
-    <p style="  font-size:4vmin">David Laubersheimer</p>
-    <p style="  font-size:4vmin ">2019-2021</p>
-    <p style="  font-size:4vmin">Peter Dauscher</p>
-    <p style="  font-size:4vmin ">2009-2014</p>
+    <p style="  font-size:5vmin ">Simulation of a simplified Von Neumann Computer</p>
+    <p style="  font-size:3vmin">David Laubersheimer<br/>2019-2021</p>
+    <p style="  font-size:3vmin">Peter Dauscher<br/>2009-2014</p>
 </div>
 
 <div id="programm" style="display : none">
@@ -136,6 +134,15 @@ mit dank an Dr. Peter Dauscher
     <input type="number" id="DataBusInput">
     <p id="AddressBus">000</p>
     <p id="DataBus">00000</p>
+    <p id="DataBusLabel">Data Bus</p>
+    <p id="AddressBusLabel">Address Bus</p>
+    <p id="MemoryLabel">Memory</p>
+    <p id="ControlUnitLabel">Control Unit</p>
+    <p id="ALULabel">Arithmetic<br/>Logic Unit</p>
+    <p id="AccumulatorLabel">Accumulator</p>
+    <p id="IRLabel" class="control">Instruction</br>Register</p>
+    <p id="MCLabel" class="control">Micro</br>Code</p>
+
     <p id="Accumulator">00000</p>
     <p id="InstructionalRegister" class="control"><span style="color:#E5002D; font-size:3vmin"
                                                         id="InsHi">00</span>.<span

@@ -1,8 +1,6 @@
 /*
 David Laubersheimer - 2019
-
 mit dank an Dr. Peter Dauscher
-
 */
 
 //daten die zückgesetzt werden müssen
@@ -45,7 +43,7 @@ var timeoutforblinking //damit das Blinken abgebrochen werden kann
 var RamEingabeHeight //positionierung des Pfeils
 var tabelHeight
 
-var startScreenFadeOutTime = 1500; // für den Ladebildschirm
+var startScreenFadeOutTime = 1000; // für den Ladebildschirm
 var loaded = false;
 
 const ramSize = 1000  //this ideally has to be a multiple of 10
@@ -56,7 +54,6 @@ if (Ram == null) {//default if local store has been cleared or johnny is started
     Ram = [];
     for (i = 0; i < ramSize; i++) {
         Ram[i] = 0;
-
     }
 }
 
@@ -75,7 +72,6 @@ function initialize() {
     } else {
         GenerateMicroCodeTable();
     }
-
 
     document.getElementById("executeSpeedSlider").value = geschwindigkeit;
     document.getElementById("controlUnitCheckbox").checked = false;
@@ -98,8 +94,7 @@ function initialize() {
     } else {
         setTimeout(fadeOutStartScreen, startScreenFadeOutTime - (loadEnd - LoadStart));
     }
-
-}//ende initialize
+}
 
 
 function resetMicrocode() {
@@ -111,7 +106,7 @@ function resetMicrocode() {
 function fadeOutStartScreen() {//für verzögertes ausblenden des Startblidschirms(frühstens nach startScreenFadeOutTime ms  )
     document.getElementById("startscreen").style.display = "none";
     document.getElementById("programm").style.display = "inline";
-    document.getElementsByTagName("body")[0].style.backgroundImage = "url(Hintergrund.png)"
+    document.getElementsByTagName("body")[0].style.backgroundImage = "url(background.png)"
     document.removeEventListener("keydown", keyDownHandler);	//wird für sonst nichts genutzt
     document.removeEventListener("mousedown", mouseDownHandler);	//wird für sonst nichts genutzt
 
@@ -440,10 +435,10 @@ function EditRam(CellNumber) {
 }
 
 
-function highlightMc(collum) {	//übernimmt auch springen
+function highlightMc(column) {	//übernimmt auch springen
     //springen im Mc
     if (!turboMode) {
-        var myElement = document.getElementsByClassName('Mccol2')[collum];
+        var myElement = document.getElementsByClassName('Mccol2')[column];
         var topPos = myElement.offsetTop;
         document.getElementById('testdiv').scrollTop = topPos;
 

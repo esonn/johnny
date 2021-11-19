@@ -1,10 +1,10 @@
-var iosPromtPwa = {
+var iosPromptPwa = {
    timesToShow : 5,
    promptOnVisit : 1,
 
 
 
-  showPromt : function({debug = false, countAsShown = true}){
+  showPrompt : function({debug = false, countAsShown = true}){
 
    let promptData = JSON.parse(localStorage.getItem("johnny-iosPwaPrompt"));
 
@@ -65,4 +65,4 @@ dismissPrompt:  function(){
 }
 
 
-iosPromtPwa.showPromt({debug: false,countAsShown:true}); //you can call this any time to bring up the promt
+iosPromptPwa.showPrompt({debug: false,countAsShown:true}); //you can call this any time to bring up the promt
